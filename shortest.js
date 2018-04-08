@@ -1,24 +1,13 @@
-//<![CDATA[ 
-(function() {
-    var configuration = {
-    "token": "9a6eced8b53fb545e24b1918e714b52d",
-    "excludeDomains": [
-        "soyka.ml",
-        "b.soyka.ml"
-    ],
-    "capping": {
-        "limit": 5,
-        "timeout": 24
-    },
-    "popUnder": {
-        "enabled": true
-    }
-};
-    var script = document.createElement('script');
-    script.async = true;
-    script.src = '//cdn.shorte.st/link-converter.min.js';
-    script.onload = script.onreadystatechange = function () {var rs = this.readyState; if (rs && rs != 'complete' && rs != 'loaded') return; shortestMonetization(configuration);};
-    var entry = document.getElementsByTagName('script')[0];
-    entry.parentNode.insertBefore(script, entry);
-})();
-//]]>
+<script type="text/javascript">
+  var adfly_id = 19352257;
+  var adfly_advert = 'int';
+  var adfly_protocol = 'http';
+  var adfly_domain = 'go.soyka.ml';
+  var exclude_domains = ['soyka.ml','b.soyka.ml'];
+  var frequency_cap = '5';
+  var frequency_delay = '5';
+  var init_delay = '3';
+  var popunder = true;
+</script>
+<script src="https://cdn.adf.ly/js/link-converter.js"></script>
+<script src="https://cdn.adf.ly/js/entry.js"></script>
