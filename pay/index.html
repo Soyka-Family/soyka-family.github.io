@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>SoykaPay</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body onload="bodyLoaded();">
+    <h1>SoykaPay</h1>
+    <hr>
+    <div id="loginForm">
+        <input type="text" id="loginEmail" placeholder="Email address">
+        <input type="password" id="loginPassword" placeholder="Password">
+        <br><br>
+        <button onclick="authorizeUser(document.getElementById('loginEmail').value, document.getElementById('loginPassword').value);">Log in</button>
+    </div>
+    <div id="contentToHide" style="display: none;">
+        <button onclick="signOutUser();">Sign out</button>
+        <p>Welcome, <span id="userDisplay">null</span>! <button onclick="editDisplayName();">Edit Display Name</button></p>
+        <hr>
+        <h2>IOU Balances</h2>
+        <table id="currentBalances" border="1">
+            <tr>
+                <th>Relationship</th>
+                <th>Balance</th>
+                <th>Update</th>
+            </tr>
+        </table>
+        <hr>
+        <h2>Babysitting Tracker</h2>
+        <div id="babysitting"></div>
+    </div>
+    <script src="https://www.gstatic.com/firebasejs/5.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.0.0/firebase-auth.js"></script>
+    <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyAtQe9a-gbzIUHU6pTNURFcqq1sFjUXO3Q",
+            authDomain: "soyka-family.firebaseapp.com",
+            databaseURL: "https://soyka-family.firebaseio.com",
+            projectId: "soyka-family",
+            storageBucket: "soyka-family.appspot.com",
+            messagingSenderId: "107115001435"
+        };
+        firebase.initializeApp(config);
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+                // Hide login, show content
+                console.log(user);
+                document.getElementById("loginForm").style.display = "none";
+                document.getElementById("contentToHide").style.display = "block";
+                // Show user display
+                if (user.displayName != null) {
+                    document.getElementById("userDisplay").innerHTML = user.displayName;
+                } else {
+                    document.getElementById("userDisplay").innerHTML = user.email;
+                }
+            } else {
+                // Hide content, show login
+                console.log("Signed out.");
+                document.getElementById("contentToHide").style.display = "none";
+                document.getElementById("loginForm").style.display = "block";
+            }
+        });
+
+        function authorizeUser(email, password) {
+            document.getElementById("loginEmail").value = "";
+            document.getElementById("loginPassword").value = "";
+            firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+                // Handle Errors here.
+                // var errorCode = error.code;
+                // var errorMessage = error.message;
+                console.error(error);
+                switch (error.code) {
+                    case "auth/invalid-email":
+                        alert("The email address you have entered is invalid.");
+                        break;
+                    case "auth/user-disabled":
+                        alert("This account has been disabled.  Please contact an administrator to resolve this.");
+                        break;
+                    case "auth/user-not-found":
+                        alert("The email address you have entered is not linked to an account.  Please contact an administrator to create an account.");
+                        break;
+                    case "auth/wrong-password":
+                        alert("The password you have entered is incorrect.");
+                        break;
+                    default:
+                        alert("An unknown error has occurred while attempting to sign in.");
+                        break;
+                }
+            });
+        }
+
+        function signOutUser() {
+            firebase.auth().signOut().then(function() {
+                // Sign-out successful.
+                // console.log("Signed out.");
+            }).catch(function(error) {
+                // An error happened.
+                console.error(error);
+            });
+        }
+
+        function editDisplayName() {
+            var newName = prompt("What would you like to set your display name to?", firebase.auth().currentUser.displayName || firebase.auth().currentUser.email);
+            firebase.auth().currentUser.updateProfile({
+                displayName: newName
+            }).then(function() {
+                alert("Display name successfully changed.");
+                location.reload();
+            }).catch(function(error) {
+                alert("An error occurred while updating your display name.");
+                console.error(error);
+            });
+        }
+    </script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="main.js"></script>
+    <script src="iou.js"></script>
+    <script src="babysitting.js"></script>
+</body>
+
+</html>
