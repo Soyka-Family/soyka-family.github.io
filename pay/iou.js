@@ -26,6 +26,7 @@ function bodyLoaded() {
             var updateInput = document.createElement("input");
             updateInput.setAttribute("size", "5");
             updateInput.setAttribute("id", "UPDATEINPUT" + currentBalances[relationship].id);
+            updateElement.setAttribute("class", "permEdit");
             updateElement.appendChild(updateInput);
             var updateSpacingElement = document.createElement("span");
             updateSpacingElement.innerHTML = "&nbsp;";

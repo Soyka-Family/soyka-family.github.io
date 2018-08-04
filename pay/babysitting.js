@@ -12,6 +12,7 @@ instance({
         var babysittingStartButton = document.createElement("button");
         babysittingStartButton.innerHTML = "Start Stopwatch";
         babysittingStartButton.setAttribute("onclick", "startBabysittingStopwatch();");
+        babysittingStartButton.setAttribute("class", "permBabysit");
         babysittingDiv.appendChild(babysittingStartButton);
     } else {
         // ************************************************
@@ -103,7 +104,7 @@ function endBabysittingStopwatch() {
         maximumFractionDigits: 2
     });
     var earningsDiv = document.createElement("div");
-    earningsDiv.innerHTML = "<b>Ben's Earnings</b>: $" + benEarnings + "<br><br><b>Matt's Earnings</b>: $" + mattEarnings + "<br><br><button onclick='addEarnings();'>Add to IOU</button>";
+    earningsDiv.innerHTML = "<b>Ben's Earnings</b>: $" + benEarnings + "<br><br><b>Matt's Earnings</b>: $" + mattEarnings + "<br><br><button onclick='addEarnings();' class='permEdit'>Add to IOU</button>";
     babysittingDiv.appendChild(earningsDiv);
 }
 

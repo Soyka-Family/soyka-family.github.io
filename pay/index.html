@@ -21,23 +21,24 @@
     <div id="contentToHide" style="display: none;">
         <button onclick="signOutUser();">Sign out</button>
         <p>Welcome, <span id="userDisplay">null</span>! <button onclick="editDisplayName();">Edit Display Name</button></p>
-        <hr>
-        <h2>IOU Balances</h2>
-        <table id="currentBalances" border="1">
+        <hr class="permView">
+        <h2 class="permView">IOU Balances</h2>
+        <table id="currentBalances" border="1" class="permView">
             <tr>
                 <th>Relationship</th>
                 <th>Balance</th>
-                <th>Update</th>
+                <th class="permEdit">Update</th>
             </tr>
         </table>
-        <hr>
-        <h2>Babysitting Tracker</h2>
-        <div id="babysitting"></div>
+        <hr class="permView">
+        <h2 class="permView">Babysitting Tracker</h2>
+        <div id="babysitting" class="permBabysit permView"></div>
     </div>
     <script src="https://www.gstatic.com/firebasejs/5.0.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.0.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.2.0/firebase-firestore.js"></script>
     <script>
+        var stylesheet = document.styleSheets[0];
         // Initialize Firebase
         var config = {
             apiKey: "AIzaSyAtQe9a-gbzIUHU6pTNURFcqq1sFjUXO3Q",
@@ -48,6 +49,10 @@
             messagingSenderId: "107115001435"
         };
         firebase.initializeApp(config);
+        var db = firebase.firestore();
+        db.settings({
+            timestampsInSnapshots: true
+        });
         firebase.auth().onAuthStateChanged(function(user) {
             if (user) {
                 // Hide login, show content
@@ -60,6 +65,32 @@
                 } else {
                     document.getElementById("userDisplay").innerHTML = user.email;
                 }
+                db.collection("users").doc(user.uid)
+                    .onSnapshot(function(doc) {
+                        if (doc.data()) {
+                            console.log(doc.data().permissions);
+                            if (doc.data().permissions.view) {
+                                stylesheet.insertRule(".permView {visibility: visible;}");
+                            } else {
+                                stylesheet.insertRule(".permView {visibility: hidden;}");
+                            }
+                            if (doc.data().permissions.edit) {
+                                stylesheet.insertRule(".permEdit {visibility: visible;}");
+                            } else {
+                                stylesheet.insertRule(".permEdit {visibility: hidden;}");
+                            }
+                            if (doc.data().permissions.babysit) {
+                                stylesheet.insertRule(".permBabysit {visibility: visible;}");
+                            } else {
+                                stylesheet.insertRule(".permBabysit {visibility: hidden;}");
+                            }
+                        } else {
+                            stylesheet.insertRule(".permEdit, .permView, .permBabysit {visibility: hidden;}");
+                            setTimeout(function() {
+                                alert("You do not have any permissions set.");
+                            }, 100);
+                        }
+                    });
             } else {
                 // Hide content, show login
                 console.log("Signed out.");
