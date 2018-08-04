@@ -50,6 +50,8 @@ instance({
                         stopwatchContent = hours + "hrs";
                     }
                 }
+            } else {
+                hours = 0;
             }
             stopwatchDiv.innerHTML = "<b>Time Elapsed</b>: " + stopwatchContent;
         }, 1000);
