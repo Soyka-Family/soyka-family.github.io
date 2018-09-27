@@ -2,7 +2,12 @@ body {
     font-family: sans-serif;
 }
 
-th, td {
+th,
+td {
     text-align: center;
     padding: 7px 20px;
+}
+
+table {
+    border-collapse: collapse;
 }
