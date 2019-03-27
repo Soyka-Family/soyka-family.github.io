@@ -20,9 +20,7 @@ function bodyLoaded() {
             relationshipDisplayElement.innerHTML = relationship;
             relationshipBalanceElement.appendChild(relationshipDisplayElement);
             var balanceDisplayElement = document.createElement("td");
-            balanceDisplayElement.innerHTML = "$" + currentBalances[relationship].balance.toLocaleString(undefined, {
-                minimumFractionDigits: 2
-            });
+            balanceDisplayElement.innerHTML = "$" + parseFloat(Math.round(currentBalances[relationship].balance * 100) / 100).toFixed(2);
             relationshipBalanceElement.appendChild(balanceDisplayElement);
             var updateElement = document.createElement("td");
             var updateInput = document.createElement("input");
