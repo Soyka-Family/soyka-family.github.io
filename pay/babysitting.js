@@ -3,7 +3,7 @@ var babysittingDiv = document.getElementById("babysitting");
 instance({
     method: "get",
     url: "/Babysitting"
-}).then(function(response) {
+}).then(function (response) {
     records = response.data.records;
     if (!records || records.length === 0) {
         // ********************************
@@ -33,7 +33,9 @@ instance({
         stopwatchEndButton.innerHTML = "End Stopwatch";
         babysittingDiv.appendChild(document.createElement("br"));
         babysittingDiv.appendChild(stopwatchEndButton);
-        intervalId = setInterval(function() {
+        var earningsDiv = document.createElement("div");
+        babysittingDiv.appendChild(earningsDiv);
+        intervalId = setInterval(function () {
             var milliseconds = parseInt((new Date()) - (new Date(records[0].fields["Start Time"])));
             minutes = Math.floor(milliseconds / 60000);
             stopwatchContent = minutes + "min";
@@ -56,6 +58,17 @@ instance({
                 hours = 0;
             }
             stopwatchDiv.innerHTML = "<b>Time Elapsed</b>: " + stopwatchContent;
+            // Calculate earnings per person
+            var totalHours = hours + (minutes / 60);
+            benEarnings = (totalHours * 5).toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+            mattEarnings = (totalHours * 1).toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+            earningsDiv.innerHTML = "<b>Ben's Earnings</b>: $" + benEarnings + "<br><br><b>Matt's Earnings</b>: $" + mattEarnings;
         }, 1000);
     }
 });
@@ -69,7 +82,7 @@ function startBabysittingStopwatch() {
                 "Start Time": (new Date()).toISOString()
             }
         }
-    }).then(function(response) {
+    }).then(function (response) {
         location.reload();
     });
 }
@@ -87,7 +100,7 @@ function endBabysittingStopwatch() {
     instance({
         method: "get",
         url: "/Babysitting"
-    }).then(function(response) {
+    }).then(function (response) {
         // Remove first and only record
         instance({
             method: "delete",
@@ -123,7 +136,7 @@ function addEarnings() {
             url: "/IOU/recjcKmBpxMZtgDrW"
         });
     }
-    axios.all([getBenBalance(), getMattBalance()]).then(axios.spread(function(benBalanceResponse, mattBalanceResponse) {
+    axios.all([getBenBalance(), getMattBalance()]).then(axios.spread(function (benBalanceResponse, mattBalanceResponse) {
         var newBenBalance = parseFloat(benBalanceResponse.data.fields.Balance) + parseFloat(benEarnings);
         var newMattBalance = parseFloat(mattBalanceResponse.data.fields.Balance) + parseFloat(mattEarnings);
 
@@ -150,7 +163,7 @@ function addEarnings() {
                 }
             });
         }
-        axios.all([updateBenBalance(), updateMattBalance()]).then(axios.spread(function(benBalanceUpdateResponse, mattBalanceUpdateResponse) {
+        axios.all([updateBenBalance(), updateMattBalance()]).then(axios.spread(function (benBalanceUpdateResponse, mattBalanceUpdateResponse) {
             location.reload();
         }));
     }));
