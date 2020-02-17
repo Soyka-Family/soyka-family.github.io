@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 
-<body onload="bodyLoaded();">
+<body>
     <div class="container-fluid">
         <h1>SoykaPay</h1>
         <div id="loginForm">
@@ -30,8 +30,8 @@
                 <button class="btn btn-outline-primary" onclick="editDisplayName();">Edit Display Name</button>
                 <button class="btn btn-outline-primary" onclick="signOutUser();">Sign out</button>
             </div>
-            <h2 class="permView">IOU Balances</h2>
-            <table id="currentBalances" border="1" class="permView table table-bordered">
+            <h2>IOU Balances</h2>
+            <table id="currentBalances" border="1" class="table table-bordered">
                 <thead>
                     <tr>
                         <th scope="col">Relationship</th>
@@ -42,14 +42,14 @@
                 </thead>
                 <tbody></tbody>
             </table>
-            <h2 class="permView">Babysitting Tracker</h2>
-            <div id="babysitting" class="permBabysit permView"></div>
+            <h2 class="permBabysit">Babysitting Tracker</h2>
+            <div id="babysitting" class="permBabysit"></div>
         </div>
     </div>
     <a class="copyrighted-badge" title="Copyrighted.com Registered &amp; Protected" target="_blank" href="https://www.copyrighted.com/website/wJwiCJVii6rGj2Gv"><img alt="Copyrighted.com Registered &amp; Protected" border="0" width="125" height="25" srcset="https://static.copyrighted.com/badges/125x25/01_1_2x.png 2x" src="https://static.copyrighted.com/badges/125x25/01_1.png" /></a><script src="https://static.copyrighted.com/badges/helper.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/5.0.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/5.0.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/5.2.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.8.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.8.2/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.8.2/firebase-firestore.js"></script>
     <script>
         var stylesheet = document.styleSheets[1];
         // Initialize Firebase
@@ -63,9 +63,6 @@
         };
         firebase.initializeApp(config);
         var db = firebase.firestore();
-        db.settings({
-            timestampsInSnapshots: true
-        });
         firebase.auth().onAuthStateChanged(function(user) {
             if (user) {
                 // Hide login, show content
@@ -82,11 +79,6 @@
                     .onSnapshot(function(doc) {
                         if (doc.data()) {
                             console.log(doc.data().permissions);
-                            if (doc.data().permissions.view) {
-                                stylesheet.insertRule(".permView {visibility: visible;}");
-                            } else {
-                                stylesheet.insertRule(".permView {visibility: hidden;}");
-                            }
                             if (doc.data().permissions.edit) {
                                 stylesheet.insertRule(".permEdit {visibility: visible;}");
                             } else {
@@ -98,7 +90,7 @@
                                 stylesheet.insertRule(".permBabysit {visibility: hidden;}");
                             }
                         } else {
-                            stylesheet.insertRule(".permEdit, .permView, .permBabysit {visibility: hidden;}");
+                            stylesheet.insertRule(".permEdit, .permBabysit {visibility: hidden;}");
                             setTimeout(function() {
                                 alert("You do not have any permissions set.");
                             }, 100);
